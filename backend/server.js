@@ -19,7 +19,7 @@ app.get('/api/test', (req, res) => {
 app.get('/api/stock-sentiment/:symbol', async (req, res) => {
   const { symbol } = req.params;
   const alphaKey = 'W5WL0FILYWC0BL4P';
-  const openRouterKey = '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';
+  const openRouterKey = process.env.OPENROUTER_API_KEY;
 
   try {
     // 🟡 1. Fetch stock data

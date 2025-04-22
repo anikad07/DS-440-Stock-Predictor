@@ -14,14 +14,22 @@ We have built this based on the [Material Tailwind Dashboard React](https://www.
 1. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
 2. Navigate to the root ./ directory of the product and run `npm install` or `yarn install` or `pnpm install` to install our local dependencies.
 3. Open a new tab in terminal and navigate to the backend folder.
-4. Run `pyenv activate stock-lstm` to activate the environment.
-5. Run `python predict_api.py`.
-6. Open a new tab in terminal and navigate to the backend folder.
-7. Run `node server.js`.
-8. Navigate back to the first tab.
-9. Run `npm run dev` or `yarn dev` or `pnpm dev` to start the local development server.
-10. Copy and paste the link into your browser.
+4. Run `pip install pyenv` 
+5. Run `pyenv install 3.11.6`
+6. Run `python3 -m vent stock-lstm`
+7. Run `source stock-lstm/bin/activate` to create the environment (in the future after already created you can activate it by running `pyenv activate stock-lstm`)
+8. Run `pip freeze > requirements.txt`
+9. Run `pip install -r requirements.txt`
+10. Run `python -m pip install flask`, `python -m pip install numpy`, `python -m pip install tensorflow`, and `python -m pip install scikit-learn`
+11. Run `python predict_api.py`.
+12. Open a new tab in terminal and navigate to the backend folder.
+13. Run `npm install express cors`
+14. Run `node server.js`.
+15. Navigate back to the first tab.
+16. Run `npm run dev` or `yarn dev` or `pnpm dev` to start the local development server.
+17. Copy and paste the link into your browser.
 
+DISCLAIMER: If you run into any issues after searching for a stock, it is likely due to the OpenRouter API key expiring after certain usage or time constraints. To fix this, you can navigate to the [OpenRouter website](openrouter.ai) and sign up for a free account to create an API key. Once you have created a key, you can navigate to the backend folder and run `vi .env`. Where it says OpenRouter key, replace with your own. Restart the three running programs by pressing control + c, and then re-run the commands (steps 11, 14, and 16). This should fix the issue. 
 
 ### What's included
 
