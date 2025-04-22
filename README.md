@@ -13,7 +13,15 @@ We have built this based on the [Material Tailwind Dashboard React](https://www.
 
 1. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
 2. Navigate to the root ./ directory of the product and run `npm install` or `yarn install` or `pnpm install` to install our local dependencies.
-3. Run `npm run dev` or `yarn dev` or `pnpm dev` to start the local development server.
+3. Open a new tab in terminal and navigate to the backend folder.
+4. Run `pyenv activate stock-lstm` to activate the environment.
+5. Run `python predict_api.py`.
+6. Open a new tab in terminal and navigate to the backend folder.
+7. Run `node server.js`.
+8. Navigate back to the first tab.
+9. Run `npm run dev` or `yarn dev` or `pnpm dev` to start the local development server.
+10. Copy and paste the link into your browser.
+
 
 ### What's included
 
@@ -34,6 +42,12 @@ material-tailwind-dashboard-react
     │   ├── App.jsx
     │   ├── main.jsx
     │   └── routes.jsx
+    ├── backend
+    │   ├── .python-version
+    │   ├── minimal.js
+    │   ├── package.json
+    │   ├── predict_api.py
+    │   ├── server.js
     ├── .gitignore
     ├── CHANGELOG.md
     ├── index.html
