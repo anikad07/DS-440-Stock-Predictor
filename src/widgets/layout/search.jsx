@@ -38,6 +38,7 @@ export function SearchCard({
   const calculateStartDate = (timePeriod) => {
     const today = new Date();
     let startDate;
+
     switch (timePeriod) {
       case "week":
         startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
@@ -51,6 +52,7 @@ export function SearchCard({
       default:
         startDate = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
     }
+
     return startDate.toISOString().slice(0, 10);
   };
 
@@ -71,15 +73,30 @@ export function SearchCard({
     const startDate = calculateStartDate(timePeriod);
     fetchData(stockTicker, startDate);
 
-    //  Fetch backend prediction and dispatch custom event
+    // Fetch backend prediction and dispatch to Home
     try {
       const res = await fetch(`http://localhost:3005/api/stock-sentiment/${stockTicker}`);
       const result = await res.json();
 
-      const forecastEvent = new CustomEvent("stock-forecast", { detail: result });
+      if (!result || result.error) {
+        throw new Error(result.details || "Invalid forecast result.");
+      }
+
+      const forecastEvent = new CustomEvent("stock-forecast", {
+        detail: {
+          symbol: result.symbol,
+          latestDate: result.latestDate,
+          latestClose: result.latestClose,
+          sentiment: result.sentiment,
+          forecast: result.forecast,
+          recommendation: result.recommendation,
+        },
+      });
+
       window.dispatchEvent(forecastEvent);
     } catch (err) {
-      console.error("Error fetching stock prediction", err);
+      console.error("Error fetching stock prediction:", err);
+      alert("Could not fetch prediction. Please try again.");
     }
   };
 

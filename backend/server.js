@@ -10,19 +10,19 @@ const port = process.env.PORT || 3005;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Test route
+// ✅ Test route
 app.get('/api/test', (req, res) => {
   res.json({ message: "Backend is working!" });
 });
 
-// Stock + sentiment + forecast + recommendation
+// ✅ Main API route
 app.get('/api/stock-sentiment/:symbol', async (req, res) => {
   const { symbol } = req.params;
-  const alphaKey = process.env.ALPHA_VANTAGE_API_KEY;
-  const openRouterKey = process.env.OPENROUTER_API_KEY;
+  const alphaKey = 'W5WL0FILYWC0BL4P';
+  const openRouterKey = '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';
 
   try {
-    // Fetch stock data
+    // 🟡 1. Fetch stock data
     const stockResponse = await axios.get(
       `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${alphaKey}`
     );
@@ -32,12 +32,12 @@ app.get('/api/stock-sentiment/:symbol', async (req, res) => {
       return res.status(400).json({ error: "Invalid symbol or API limit reached." });
     }
 
-    const dates = Object.keys(stockData).slice(0, 60).reverse(); // latest 60 days
+    const dates = Object.keys(stockData).slice(0, 60).reverse(); // last 60 days
     const prices = dates.map(date => parseFloat(stockData[date]["4. close"]));
     const latestDate = dates[dates.length - 1];
     const latestClose = prices[prices.length - 1];
 
-    // Get sentiment via OpenRouter
+    // 🟡 2. Get sentiment via OpenRouter
     const sentimentPrompt = `The latest closing price of ${symbol} is ${latestClose}. Analyze the sentiment (Positive, Neutral, or Negative). Respond only with one word.`;
 
     const sentimentResponse = await axios.post(
@@ -56,6 +56,8 @@ app.get('/api/stock-sentiment/:symbol', async (req, res) => {
       {
         headers: {
           Authorization: `Bearer ${openRouterKey}`,
+          'HTTP-Referer': 'http://localhost:3005',
+          'X-Title': 'Stock Market Forecasting App',
           'Content-Type': 'application/json'
         }
       }
@@ -63,7 +65,7 @@ app.get('/api/stock-sentiment/:symbol', async (req, res) => {
 
     const sentiment = sentimentResponse.data.choices[0].message.content.trim();
 
-    // Send price data to local Flask LSTM model
+    // 🟡 3. Get forecast from local LSTM model
     const predictionResponse = await axios.post('http://localhost:8000/predict', {
       symbol,
       closing_prices: prices
@@ -71,7 +73,7 @@ app.get('/api/stock-sentiment/:symbol', async (req, res) => {
 
     let forecast = predictionResponse.data;
 
-    // Adjust based on sentiment
+    // 🟡 4. Adjust forecast based on sentiment
     let adjustment = 1.0;
     if (sentiment.toLowerCase() === "positive") adjustment = 1.01;
     else if (sentiment.toLowerCase() === "negative") adjustment = 0.99;
@@ -80,14 +82,14 @@ app.get('/api/stock-sentiment/:symbol', async (req, res) => {
       forecast[key] = parseFloat((forecast[key] * adjustment).toFixed(2));
     });
 
-    // Generate recommendation
+    // 🟡 5. Generate recommendation
     const futurePrice = forecast["1_month"];
     const diff = ((futurePrice - latestClose) / latestClose) * 100;
     let recommendation = "Hold";
     if (diff > 3) recommendation = "Buy";
     else if (diff < -3) recommendation = "Sell";
 
-    // Final response
+    // ✅ Final response
     res.json({
       symbol,
       latestDate,
@@ -98,7 +100,7 @@ app.get('/api/stock-sentiment/:symbol', async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error:", error.response?.data || error.message);
+    console.error("❌ Error:", error.response?.data || error.message);
     res.status(500).json({
       error: "Internal Server Error",
       details: error.message || "Unknown error"
@@ -106,7 +108,7 @@ app.get('/api/stock-sentiment/:symbol', async (req, res) => {
   }
 });
 
-// Start server
+// 🚀 Start server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
