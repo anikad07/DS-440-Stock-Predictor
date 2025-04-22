@@ -14,9 +14,9 @@ We have built this based on the [Material Tailwind Dashboard React](https://www.
 1. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
 2. Navigate to the root ./ directory of the product and run `npm install` or `yarn install` or `pnpm install` to install our local dependencies.
 3. Open a new tab in terminal and navigate to the backend folder.
-4. Run `pip install pyenv` 
+4. Run `brew install pyenv` 
 5. Run `pyenv install 3.11.6`
-6. Run `python3 -m vent stock-lstm`
+6. Run `python3 -m venv stock-lstm`
 7. Run `source stock-lstm/bin/activate` to create the environment (in the future after already created you can activate it by running `pyenv activate stock-lstm`)
 8. Run `pip freeze > requirements.txt`
 9. Run `pip install -r requirements.txt`
